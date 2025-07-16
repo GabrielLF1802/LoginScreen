@@ -4,11 +4,12 @@ const mongoose= require('mongoose')
 const {engine} = require('express-handlebars')
 const path= require('path')
 const bodyParser= require('body-parser')
+const session= require('express-session')
 const flash= require('connect-flash')
-
 require('./models/user')
 const Usuario= mongoose.model('usuarios')
 const db= require('./config/db')
+
 
 // Config
 
@@ -23,6 +24,15 @@ mongoose.connect(db.mongoURI).then(()=>{
 }).catch((err)=>{
     console.log('Erro ao se conectar com o mongodb' + err)
 })
+
+// Session
+app.use(session({
+    secret:"loginexpress",
+    resave:true,
+    saveUninitialized:true
+}))
+
+app.use(flash())
 
 //Middleware
 app.use((req,res,next)=>{
@@ -52,15 +62,23 @@ app.get('/',(req,res)=>{
 app.get('/register',(req,res)=>{
     res.render('register')
 })
-app.post('/register'),(req,res)=>{
+app.post('/register',(req,res)=>{
     const newUser= {
         nome:req.body.nome,
         senha: req.body.senha,
         nasc: req.body.nasc,
         email: req.body.email
     }
-    new Usuario(newUser).then()
-}
+    new Usuario(newUser).save().then(()=>{
+        req.flash('success_msg','Usuário criado com sucesso!')
+        console.log('Usuario criado com sucesso!')
+        res.redirect('/')
+    }).catch((err)=>{
+        req.flash('error_msg','Falha ao criar novo usuário')
+        console.log('Falha ao criar o usuário')
+        res.redirect('/register')
+    })
+})
 
 
 
