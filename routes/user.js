@@ -3,6 +3,9 @@ const router = express.Router()
 const mongoose= require('mongoose')
 require('../models/user')
 const Usuario = mongoose.model('usuarios')
+const passport= require('passport')
+const bcrypt= require('bcryptjs')
+
 
 
 
@@ -38,36 +41,49 @@ router.post('/register',(req,res)=>{
         erros.push({texto:'Senha muito curta'})
     }
     if(erros.length>0){
-        res.render('register',{erros:erros})
+        res.render('user/register',{erros:erros})
 
     }else{
         Usuario.findOne({email:req.body.email}).then((usuario)=>{
             if(usuario){
                 req.flash('error_msg','Email já cadastrado')
-                res.redirect('/register')
+                res.render('user/register')
             }else{
-                const newUser= {
+                const newUser= new Usuario({
                     nome:req.body.nome,
                     senha: req.body.senha,
                     nasc: req.body.nasc,
                     email: req.body.email
-                }
-                new Usuario(newUser).save().then(()=>{
-                    req.flash('success_msg','Usuário criado com sucesso!')
-                    console.log('Usuario criado com sucesso!')
-                    res.redirect('/')
-                }).catch((err)=>{
-                    req.flash('error_msg','Falha ao criar novo usuário')
-                    console.log('Falha ao criar o usuário')
-                    res.redirect('/register')
                 })
+                bcrypt.genSalt(10,(erro,salt)=>{
+                    bcrypt.hash(newUser.senha , salt, (erro,hash)=>{
+                        if(erro){
+                            req.flash('error_msg','Erro no sistema de cadastro')
+                            res.redirect('/user/')
+                        }
+                        newUser.senha= hash
+                        newUser.save().then(()=>{
+                            req.flash('success_msg','Usuário criado com sucesso!')
+                            console.log('Usuario criado com sucesso!')
+                            res.redirect('/user/')
+                        }).catch((err)=>{
+                            req.flash('error_msg','Falha ao criar novo usuário')
+                            console.log('Falha ao criar o usuário')
+                            res.render('user/register')
+                })
+                        
+                })
+
+                })
+                
+
             
             }
 
             
         }).catch((err)=>{
             req.flash('error_msg','Email já cadastrado')
-            res.redirect('/register')
+            res.redirect('/user/register')
         })
 
     }
@@ -75,6 +91,9 @@ router.post('/register',(req,res)=>{
 
 router.get('/login',(req,res)=>{
     res.render('user/login')
+})
+router.post('/login',(req,res, next)=>{
+
 })
 
 

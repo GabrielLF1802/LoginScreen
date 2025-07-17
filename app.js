@@ -10,6 +10,10 @@ const usuario= require('./routes/user')
 require('./models/user')
 const Usuario= mongoose.model('usuarios')
 const db= require('./config/db')
+const passport=require('passport')
+require('./config/auth')
+
+
 
 
 // Config
@@ -33,6 +37,8 @@ app.use(session({
     saveUninitialized:true
 }))
 
+app.use(passport.initialize())
+app.use(passport.session())
 app.use(flash())
 
 //Middleware
