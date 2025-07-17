@@ -6,6 +6,7 @@ const path= require('path')
 const bodyParser= require('body-parser')
 const session= require('express-session')
 const flash= require('connect-flash')
+const usuario= require('./routes/user')
 require('./models/user')
 const Usuario= mongoose.model('usuarios')
 const db= require('./config/db')
@@ -56,61 +57,8 @@ app.use(express.static(path.join(__dirname,'public')))
 
 
 // Routes
-app.get('/',(req,res)=>{
-    res.render('home')
-})
-app.get('/register',(req,res)=>{
-    res.render('register')
-})
-app.post('/register',(req,res)=>{
 
-    let erros= []
-
-    if(!req.body.nome|| req.body.nome == undefined || req.body.nome == null){
-        erros.push({texto:'Nome inválido'})
-    }
-    if(!req.body.email||req.body.email == undefined|| req.body.email == null){
-        erros.push({texto:'Email inválido'})
-    }
-    if(!req.body.senha || req.body.senha == undefined || req.body.senha == null){
-        erros.push({texto:'Senha inválida'})
-    }
-    if(!req.body.nasc || req.body.nasc == undefined || req.body.nasc == null){
-        erros.push({texto:'Data de nascimento inválida'})
-    }else{
-        Usuario.findOne({email:req.body.email}).then((usuario)=>{
-            if(usuario){
-                req.flash('error_msg','Email já cadastrado')
-                res.redirect('/')
-            }else{
-                const newUser= {
-                    nome:req.body.nome,
-                    senha: req.body.senha,
-                    nasc: req.body.nasc,
-                    email: req.body.email
-                }
-                new Usuario(newUser).save().then(()=>{
-                    req.flash('success_msg','Usuário criado com sucesso!')
-                    console.log('Usuario criado com sucesso!')
-                    res.redirect('/')
-                }).catch((err)=>{
-                    req.flash('error_msg','Falha ao criar novo usuário')
-                    console.log('Falha ao criar o usuário')
-                    res.redirect('/register')
-                })
-            
-            }
-        }).catch((err)=>{
-            req.flash('error_msg','Email já cadastrado')
-            res.redirect('/')
-        })
-
-}
-})
-
-
-
-
+app.use('/user',usuario)
 
 
 
