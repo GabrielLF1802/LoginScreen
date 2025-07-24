@@ -11,7 +11,7 @@ require('./models/user')
 const Usuario= mongoose.model('usuarios')
 const db= require('./config/db')
 const passport=require('passport')
-require('./config/auth')
+require('./config/auth')(passport)
 
 
 

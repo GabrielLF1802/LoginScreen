@@ -93,7 +93,13 @@ router.get('/login',(req,res)=>{
     res.render('user/login')
 })
 router.post('/login',(req,res, next)=>{
-    
+    passport.authenticate('local',{
+        failureRedirect:'/user/login',
+        failureFlash:true,
+    })(req,res,()=>{
+        req.flash('success_msg','Logado com sucesso!')
+        res.redirect('/user/')
+    })
 })
 
 

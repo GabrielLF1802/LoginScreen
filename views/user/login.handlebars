@@ -1,3 +1,7 @@
+{{#if error}}
+    <div class="alert alert-danger">{{error}}</div>
+{{/if}}
+
 <div>
     <form action="/user/login" method="POST">
         <label for="email">
