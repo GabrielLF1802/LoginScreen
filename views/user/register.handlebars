@@ -4,24 +4,34 @@
 {{/each}}
 {{/if}}
 
-<div>
-    <form action="/user/register" method="POST">
-        <label for="nome">Nome:
-            <input type="text" name="nome" id="nome">
-        </label>
-        <label for="nasc">Nascimento:
-            <input type="Date" name="nasc" id="nasc">
-        </label>
-        <label for="email">Email:
-            <input type="text" name="email" id="email">
-        </label>
-        <label for="senha">Senha:
-            <input type="password" name="senha" id="senha">
-        </label>
-        <label for="senha2">Confirme a Senha
-            <input type="password" name="senha2" id="senha2">
-        </label>
-        <button class="btn btn-success">Register</button>
-    </form>
-</div>
-<a href="/user/"><button class="btn btn-danger">Home</button></a>
+<main class="d-grid gap-2 col-7 mx-auto mt-5">
+        <form action="/user/register" method="POST">
+            <h1 class="text-center">Register</h1>
+            <div class="form-floating">
+                <input type="text" name="nome" id="nome" class="form-control">
+                <label for="nome">Nome:</label>
+            </div>
+            <div class="form-floating">
+                <input type="Date" name="nasc" id="nasc" class="form-control">
+                <label for="nasc">Nascimento:</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" name="email" id="email" class="form-control">
+                <label for="email">Email:</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" name="senha" id="senha" class="form-control">
+                <label for="senha">Senha:</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" name="senha2" id="senha2" class="form-control">
+                <label for="senha2">Confirme a Senha</label>
+            </div>
+            <div class="d-grid gap-1 col-2 mx-auto mt-3">
+                <button class="btn btn-success w-100 py-2">Register</button>
+            </div>  
+        </form>
+        <div class=" d-grid gap-1 col-2 mx-auto mt-1">
+            <a href="/user/"><button class="btn btn-danger w-100 py-2">Home</button></a>
+        </div>
+</main>
